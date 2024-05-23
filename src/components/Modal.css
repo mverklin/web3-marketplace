@@ -1,0 +1,48 @@
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modal-content {
+    background: #e0e5ec;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 9px 9px 16px #a3b1c6, -9px -9px 16px #ffffff;
+    text-align: center;
+    width: 80%;
+    max-width: 500px;
+    position: relative;
+  }
+  
+  .image-tray {
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+    margin: 20px 0;
+  }
+  
+  .image-tray img {
+    width: 100px;
+    height: auto;
+  }
+  
+  .buy-button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .buy-button:hover {
+    background-color: #218838;
+  }
+  

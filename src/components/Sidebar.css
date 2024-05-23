@@ -1,0 +1,40 @@
+.sidebar {
+  width: 200px;
+  height: 100vh;
+  background-color: #ffffff;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.sidebar .logo {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.sidebar .logo img {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+
+.sidebar .logo h1 {
+  font-size: 18px;
+}
+
+.sidebar .nav-links {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar .nav-links a {
+  text-decoration: none;
+  color: #333;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar .nav-links a svg {
+  margin-right: 10px;
+}

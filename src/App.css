@@ -1,0 +1,17 @@
+.App {
+  display: flex;
+}
+
+.content {
+  margin-left: 200px; /* Adjust according to Sidebar width */
+  padding: 20px;
+  width: calc(100% - 200px); /* Adjust according to Sidebar width */
+}
+
+body {
+  font-family: 'Helvetica Neue', sans-serif;
+  background-color: #1d1d1d;
+  color: #e0e0e0;
+  margin: 0;
+  padding: 0;
+}

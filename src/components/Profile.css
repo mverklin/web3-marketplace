@@ -1,0 +1,49 @@
+.profile {
+  padding: 20px;
+  margin-left: 250px; /* Adjust to ensure it doesn't overlap with the sidebar */
+}
+
+.profile h1 {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.profile-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-field label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.profile-field input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.profile-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.profile-buttons button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.profile-buttons button:hover {
+  background-color: #0056b3;
+}
