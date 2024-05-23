@@ -1,55 +1,76 @@
 const express = require('express');
 const session = require('express-session');
+const passport = require('passport');
+const InstagramStrategy = require('passport-instagram').Strategy;
+const dotenv = require('dotenv');
 const axios = require('axios');
-const app = express();
-const PORT = 5001;
 
+dotenv.config();
+
+const app = express();
+
+// Configure session middleware
 app.use(session({
-  secret: 'secretKey',
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
 }));
 
-app.get('/auth/instagram', (req, res) => {
-  const redirectUri = 'http://localhost:5001/auth/instagram/callback';
-  res.redirect(`https://api.instagram.com/oauth/authorize?client_id=1095015788267581&redirect_uri=${redirectUri}&scope=user_profile,user_media&response_type=code`);
+// Initialize Passport
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.serializeUser((user, done) => {
+  done(null, user);
 });
 
-app.get('/auth/instagram/callback', async (req, res) => {
-  const code = req.query.code;
-  const redirectUri = 'http://localhost:5001/auth/instagram/callback';
+passport.deserializeUser((obj, done) => {
+  done(null, obj);
+});
 
-  try {
-    const response = await axios.post(`https://api.instagram.com/oauth/access_token`, {
-      client_id: '1095015788267581',
-      client_secret: 'ace0398d1b7f51efbc6ccb3bf3af96d9',
-      grant_type: 'authorization_code',
-      redirect_uri: redirectUri,
-      code: code,
-    });
-
-    req.session.accessToken = response.data.access_token;
-    res.redirect('/dashboard');
-  } catch (error) {
-    console.error('Error exchanging code for token', error);
-    res.send('Error exchanging code for token');
+// Configure the Instagram strategy for Passport
+passport.use(new InstagramStrategy({
+    clientID: process.env.INSTAGRAM_CLIENT_ID,
+    clientSecret: process.env.INSTAGRAM_CLIENT_SECRET,
+    callbackURL: process.env.INSTAGRAM_REDIRECT_URI,
+  },
+  (accessToken, refreshToken, profile, done) => {
+    profile.accessToken = accessToken; // Store access token in profile
+    return done(null, profile);
   }
-});
+));
+
+// Define routes
+app.get('/auth/instagram',
+  passport.authenticate('instagram'));
+
+app.get('/auth/instagram/callback', 
+  passport.authenticate('instagram', { failureRedirect: '/' }),
+  (req, res) => {
+    // Successful authentication
+    res.redirect('/dashboard');
+  });
 
 app.get('/dashboard/data', async (req, res) => {
-  if (!req.session.accessToken) {
-    return res.status(401).send('Unauthorized');
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({ error: 'User not authenticated' });
   }
 
   try {
-    const response = await axios.get(`https://graph.instagram.com/me?fields=id,username,account_type,media_count&access_token=${req.session.accessToken}`);
+    const { accessToken, id } = req.user;
+    const url = `https://graph.instagram.com/${id}?fields=id,username,media_count,account_type,profile_picture_url&access_token=${accessToken}`;
+
+    const response = await axios.get(url);
     res.json(response.data);
   } catch (error) {
-    console.error('Error fetching Instagram data', error);
-    res.status(500).send('Error fetching Instagram data');
+    console.error('Error fetching data:', error);
+    res.status(500).json({ error: 'Error fetching data' });
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+// Serve the frontend files
+app.use(express.static('public'));
+
+app.listen(5001, () => {
+  console.log('Server running on http://localhost:5001');
 });
